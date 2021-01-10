@@ -4,15 +4,17 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="delegatedBuild" value="true" />
         <option name="testRunner" value="PLATFORM" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="D:/gradle-5.6.2" />
-        <option name="gradleJvm" value="1.8" />
+        <option name="gradleHome" value="$PROJECT_DIR$/../../gradle/gradle-6.7.1" />
+        <option name="gradleJvm" value="15" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/netlibrary" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
