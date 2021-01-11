@@ -19,10 +19,8 @@ public class SearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Intent intent = getIntent();
-//        String responseBody = intent.getStringExtra("responseBody");
         final ListView lv = findViewById(R.id.lv);
 
-//        List<Novel> novels = Novel.fromBQG.apply(responseBody);
         List<Novel> novels = JSON.parseArray(intent.getStringExtra("novelList"), Novel.class);
 
         lv.setAdapter(new ArrayAdapter<>(this,

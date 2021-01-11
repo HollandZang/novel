@@ -9,21 +9,12 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.holland.novel.R;
-import com.holland.novel.http.HttpClient;
+import com.holland.netlibrary.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
 
-import java.util.stream.Collectors;
-
-import com.holland.novel.domain.Chapter;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.Request;
 
-/**
- * TODO 拉取章节可能出现重复:  名称相同地址不同
- */
 public class ChapterActivity extends AppCompatActivity {
 
     @Override
@@ -36,23 +27,19 @@ public class ChapterActivity extends AppCompatActivity {
 
         final ListView lv = findViewById(R.id.lv);
 
-        Request request = new Request.Builder().url(homeUrl).build();
-        Log.d("ChapterActivity", request.url().toString());
-
-        HttpClient.request(request, response ->
-                Observable.just(response)
-                        .map(resp -> Chapter.fromBQG.apply(resp.body().string()))
-                        .subscribeOn(Schedulers.io())
+        BQGClient.INSTANCE.listChapter(this, homeUrl, chapterList ->
+                Observable.just(chapterList)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(chapters -> {
                                     lv.setAdapter(new ArrayAdapter<>(ChapterActivity.this,
                                             android.R.layout.simple_list_item_1,
-                                            chapters.stream().map(Chapter::getName).collect(Collectors.toList())));
+                                            chapters));
                                     lv.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
-                                        NovelStore.firstStore(this, novelName, arg2, chapters);
+                                        NovelStore.firstStore1(this, novelName, arg2, chapters);
                                         startActivity(new Intent("app.READ"));
                                     });
                                 },
-                                e -> Log.e("ChapterActivity", "onResponse: ", e)));
+                                e -> Log.e("ChapterActivity", "onResponse: ", e))
+                        .dispose());
     }
 }

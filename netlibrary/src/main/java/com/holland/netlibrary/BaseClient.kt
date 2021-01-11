@@ -5,7 +5,10 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.widget.Toast
-import okhttp3.*
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.IOException
 import java.util.function.Consumer
 
@@ -17,24 +20,14 @@ object BaseClient {
 
     fun baseRequestAsync(context: Context, request: Request, success: Consumer<Response?>?) {
         INSTANCE.newCall(request).enqueue(
-            baseCallBack(context, request.url.encodedPath, success)
+                object : BaseCallback(context, request.url.encodedPath) {
+                    override fun onResponse(call: Call, response: Response) {
+                        if (!response.isSuccessful) throw IOException("Unexpected code $response")
+                        Log.d(this.javaClass.name, "请求成功: ${request.url.encodedPath}")
+                        success?.accept(response)
+                    }
+                }
         )
-    }
-
-    fun baseCallBack(context: Context, url: String?, success: Consumer<Response?>?): Callback {
-        return object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d(this.javaClass.name, "请求失败: $url")
-                e.printStackTrace()
-                toast(context, "网络错误")
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                if (!response.isSuccessful) throw IOException("Unexpected code $response")
-                Log.d(this.javaClass.name, "请求成功: $url")
-                success?.accept(response)
-            }
-        }
     }
 
     fun toast(context: Context, msg: String) {
