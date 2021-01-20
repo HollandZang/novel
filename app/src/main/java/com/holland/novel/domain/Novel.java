@@ -4,7 +4,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
 
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import lombok.Data;
@@ -17,17 +16,21 @@ public class Novel {
     private String author;
     private String latestChapter;
 
-    // TODO: 6/14/2020 String -> Date
+    /**
+     * yy--MM--dd
+     */
     private String latestTime;
 
-    /*unit: kb*/
+    /**
+     * unit: kb
+     */
     private String size;
     private Boolean finished;
 
     private String homeUrl;
 
-    public static Function<String, List<Novel>> fromBQG = s -> {
-        Elements novel = Jsoup.parse(s)
+    public static List<Novel> listNovels(String responseBody) {
+        Elements novel = Jsoup.parse(responseBody)
                 .body()
                 .getElementById("main")
                 .getElementById("content")
@@ -45,5 +48,5 @@ public class Novel {
                         .setFinished("完本".equals(n.child(5).text()))
                         .setHomeUrl(n.child(0).child(0).attributes().get("href")))
                 .collect(Collectors.toList());
-    };
+    }
 }

@@ -1,9 +1,8 @@
-package com.holland.netlibrary
+package com.holland.novel.http
 
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.widget.Toast
 import okhttp3.Call
 import okhttp3.OkHttpClient
@@ -18,13 +17,17 @@ import java.util.function.Consumer
 object BaseClient {
     val INSTANCE = OkHttpClient()
 
-    fun baseRequestAsync(context: Context, request: Request, success: Consumer<Response?>?) {
+    fun baseRequestAsync(context: Context, request: Request, onResponse: Consumer<Response>?, onFailure: Consumer<IOException>?) {
         INSTANCE.newCall(request).enqueue(
                 object : BaseCallback(context, request.url.encodedPath) {
                     override fun onResponse(call: Call, response: Response) {
-                        if (!response.isSuccessful) throw IOException("Unexpected code $response")
-                        Log.d(this.javaClass.name, "请求成功: ${request.url.encodedPath}")
-                        success?.accept(response)
+                        super.onResponse(call, response)
+                        onResponse?.accept(response)
+                    }
+
+                    override fun onFailure(call: Call, e: IOException) {
+                        super.onFailure(call, e)
+                        onFailure?.accept(e)
                     }
                 }
         )

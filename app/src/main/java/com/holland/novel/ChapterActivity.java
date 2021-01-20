@@ -9,7 +9,7 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.holland.netlibrary.bqg.BQGClient;
+import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -27,19 +27,21 @@ public class ChapterActivity extends AppCompatActivity {
 
         final ListView lv = findViewById(R.id.lv);
 
-        BQGClient.INSTANCE.listChapter(this, homeUrl, chapterList ->
-                Observable.just(chapterList)
+        BQGClient.INSTANCE.listChapter(this,
+                homeUrl,
+                chapterList -> Observable.just(chapterList)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(chapters -> {
                                     lv.setAdapter(new ArrayAdapter<>(ChapterActivity.this,
                                             android.R.layout.simple_list_item_1,
                                             chapters));
                                     lv.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
-                                        NovelStore.firstStore1(this, novelName, arg2, chapters);
+                                        NovelStore.firstStore(this, novelName, arg2, chapters);
                                         startActivity(new Intent("app.READ"));
                                     });
                                 },
                                 e -> Log.e("ChapterActivity", "onResponse: ", e))
-                        .dispose());
+                        .dispose(),
+                null);
     }
 }

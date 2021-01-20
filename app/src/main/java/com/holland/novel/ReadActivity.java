@@ -9,24 +9,25 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.holland.novel.R;
 import com.holland.novel.domain.Chapter;
-import com.holland.novel.domain.Content;
-import com.holland.novel.http.HttpClient;
+import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
 
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
-import okhttp3.Request;
 
 public class ReadActivity extends AppCompatActivity {
 
     String novelName;
     List<Chapter> chapters;
     int index;
+
+    TextView vContent;
+    ScrollView sv;
+    Button btnNext;
+    Button btnPrefix;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,39 +38,100 @@ public class ReadActivity extends AppCompatActivity {
         chapters = NovelStore.getChapters(this);
         this.setTitle(novelName);
 
-        final TextView vContent = findViewById(R.id.content);
-        final ScrollView sv = findViewById(R.id.scrollView);
-        final Button btnNext = findViewById(R.id.btn_next);
-        final Button btnChapter = findViewById(R.id.btn_chapter);
+        vContent = findViewById(R.id.content);
+        sv = findViewById(R.id.scrollView);
+        btnNext = findViewById(R.id.btn_next);
+        btnPrefix = findViewById(R.id.btn_prefix);
 
         Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(index).getUrl());
-        Request request = new Request.Builder().get().url(chapters.get(index).getUrl()).build();
 
-        HttpClient.request(request, response ->
-                Observable.just(response)
-                        .subscribeOn(Schedulers.computation())
-                        .map(resp -> Content.fromBQG.apply(resp.body().string()))
+        BQGClient.INSTANCE.textPart(this,
+                chapters.get(index).getUrl(),
+                response -> Observable.just(response)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(text -> {
                             vContent.append(chapters.get(index).getName());
                             vContent.append(text);
-                        }));
+                            vContent.append("\n");
+                        })
+                        .dispose(),
+                null);
 
+        /*选择翻页模式*/
+        modelPageScroll();
+    }
+
+    /**
+     * 不上下滑的章节翻页版
+     */
+    private void modelPage() {
+
+    }
+
+    /**
+     * 章节翻页版
+     */
+    private void modelPageScroll() {
         btnNext.setOnClickListener(v -> {
-            index++;
-            NovelStore.nextStore(this, index);
-            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(index).getUrl());
-            Request request1 = new Request.Builder().get().url(chapters.get(index).getUrl()).build();
-            HttpClient.request(request1, response ->
-                    Observable.just(response)
-                            .subscribeOn(Schedulers.computation())
-                            .map(resp -> Content.fromBQG.apply(resp.body().string()))
+            int nextIndex = index + 1;
+            NovelStore.nextStore(this, nextIndex);
+            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
+
+            BQGClient.INSTANCE.textPart(this,
+                    chapters.get(nextIndex).getUrl(),
+                    response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe(s -> {
-                                vContent.append("\n\n");
-                                vContent.append(chapters.get(index).getName());
-                                vContent.append(s);
-                            }));
+                            .subscribe(text -> {
+                                vContent.setText(chapters.get(nextIndex).getName());
+                                vContent.append(text);
+                                vContent.append("\n");
+                                index = nextIndex;
+                            })
+                            .dispose(),
+                    null);
+        });
+
+        btnPrefix.setOnClickListener(v -> {
+            int prefixIndex = index + 1;
+            NovelStore.nextStore(this, prefixIndex);
+            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(prefixIndex).getUrl());
+
+            BQGClient.INSTANCE.textPart(this,
+                    chapters.get(prefixIndex).getUrl(),
+                    response -> Observable.just(response)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(text -> {
+                                vContent.setText(chapters.get(prefixIndex).getName());
+                                vContent.append(text);
+                                vContent.append("\n");
+                                index = prefixIndex;
+                            })
+                            .dispose(),
+                    null);
+        });
+    }
+
+    /**
+     * 上下滑动翻页版
+     */
+    private void modelScroll() {
+        btnNext.setOnClickListener(v -> {
+            int nextIndex = index + 1;
+            NovelStore.nextStore(this, nextIndex);
+            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
+
+            BQGClient.INSTANCE.textPart(this,
+                    chapters.get(nextIndex).getUrl(),
+                    response -> Observable.just(response)
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(text -> {
+                                vContent.append(chapters.get(nextIndex).getName());
+                                vContent.append(text);
+                                vContent.append("\n");
+                                index = nextIndex;
+                            })
+                            .dispose(),
+                    null);
         });
     }
 }

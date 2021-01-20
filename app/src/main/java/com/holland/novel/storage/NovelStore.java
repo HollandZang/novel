@@ -28,14 +28,6 @@ public class NovelStore {
                 .apply();
     }
 
-    public static void firstStore1(Context context, String novelName, int index, List<com.holland.netlibrary.bqg.bean.Chapter> chapters) {
-        getInstance(context).edit()
-                .putString(NOVEL_NAME, novelName)
-                .putInt(INDEX, index)
-                .putString(CHAPTERS, JSON.toJSONString(chapters))
-                .apply();
-    }
-
     public static void nextStore(Context context, int index) {
         getInstance(context).edit()
                 .putInt(INDEX, index)

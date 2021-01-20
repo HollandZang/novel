@@ -1,4 +1,4 @@
-package com.holland.netlibrary.bqg
+package com.holland.novel.enums
 
 enum class Url(val url: String) {
     /**

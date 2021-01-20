@@ -1,3 +1,2 @@
-include ':netlibrary'
 include ':app'
 rootProject.name = "Novel"

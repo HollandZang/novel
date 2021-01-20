@@ -3,7 +3,6 @@ package com.holland.novel.domain;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Content {
@@ -16,8 +15,11 @@ public class Content {
             "公告：笔趣阁免费APP上线了，支持安卓,苹果。请关注微信公众号进入下载安装&nbsp:wanbenheji&nbsp:(按住三秒复制)!!!",
             "X23US.COM更新最快"};
 
-    public static Function<String, String> fromBQG = s -> {
-        Element element = Jsoup.parse(s)
+    /**
+     * 从xml格式中获取正文内容
+     */
+    public static String getContent(String responseBody) {
+        Element element = Jsoup.parse(responseBody)
                 .body()
                 .getElementById("wrapper")
                 .getElementsByClass("content_read").first()
@@ -39,6 +41,5 @@ public class Content {
 //                .replace(ENTER, "\n")
                 .replace(QUADRUPLE_SPACE, "\n\n        ")
                 .replace(SPACE, "  ");
-    };
-
+    }
 }
