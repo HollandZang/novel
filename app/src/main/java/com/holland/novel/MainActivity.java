@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnSearch = findViewById(R.id.btn_search);
         final TextView vNovelName = findViewById(R.id.v_novel_name);
 
-        ChapterDatabase db = Room.databaseBuilder(getApplicationContext(), ChapterDatabase.class, "database-name").build();
+//        ChapterDatabase db = Room.databaseBuilder(getApplicationContext(), ChapterDatabase.class, "database-name").build();
 
         new EventRegister()
                 .onContinueRead()
@@ -50,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
                                     .subscribe(
                                             body -> startActivity(new Intent("app.SEARCH")
                                                     .putExtra("novelList", JSON.toJSONString(body))),
-                                            e -> Log.e("MainActivity", "onResponse: ", e))
-                                    .dispose(),
+                                            e -> Log.e("MainActivity", "onResponse: ", e)),
                             null));
             return this;
         }

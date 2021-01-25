@@ -53,8 +53,7 @@ public class ReadActivity extends AppCompatActivity {
                             vContent.append(chapters.get(index).getName());
                             vContent.append(text);
                             vContent.append("\n");
-                        })
-                        .dispose(),
+                        }),
                 null);
 
         /*选择翻页模式*/
@@ -86,13 +85,12 @@ public class ReadActivity extends AppCompatActivity {
                                 vContent.append(text);
                                 vContent.append("\n");
                                 index = nextIndex;
-                            })
-                            .dispose(),
+                            }),
                     null);
         });
 
         btnPrefix.setOnClickListener(v -> {
-            int prefixIndex = index + 1;
+            int prefixIndex = index - 1;
             NovelStore.nextStore(this, prefixIndex);
             Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(prefixIndex).getUrl());
 
@@ -101,12 +99,12 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
+
                                 vContent.setText(chapters.get(prefixIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n");
                                 index = prefixIndex;
-                            })
-                            .dispose(),
+                            }),
                     null);
         });
     }
@@ -129,8 +127,7 @@ public class ReadActivity extends AppCompatActivity {
                                 vContent.append(text);
                                 vContent.append("\n");
                                 index = nextIndex;
-                            })
-                            .dispose(),
+                            }),
                     null);
         });
     }

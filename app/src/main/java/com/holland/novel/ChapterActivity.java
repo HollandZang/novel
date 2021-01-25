@@ -9,8 +9,11 @@ import android.widget.ListView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.holland.novel.domain.Chapter;
 import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
+
+import java.util.stream.Collectors;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
@@ -34,14 +37,14 @@ public class ChapterActivity extends AppCompatActivity {
                         .subscribe(chapters -> {
                                     lv.setAdapter(new ArrayAdapter<>(ChapterActivity.this,
                                             android.R.layout.simple_list_item_1,
-                                            chapters));
+                                            chapters.stream().map(Chapter::getName).collect(Collectors.toList())
+                                    ));
                                     lv.setOnItemClickListener((arg0, arg1, arg2, arg3) -> {
                                         NovelStore.firstStore(this, novelName, arg2, chapters);
                                         startActivity(new Intent("app.READ"));
                                     });
                                 },
-                                e -> Log.e("ChapterActivity", "onResponse: ", e))
-                        .dispose(),
+                                e -> Log.e("ChapterActivity", "onResponse: ", e)),
                 null);
     }
 }

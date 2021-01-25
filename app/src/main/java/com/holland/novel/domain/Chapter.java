@@ -43,7 +43,7 @@ public class Chapter implements Serializable {
         return chapters.stream().map(c ->
                 new Chapter()
                         .setName(c.child(0).text())
-                        .setUrl(Url.BASE + c.child(0).attributes().get("href"))
+                        .setUrl(Url.BASE.getUrl() + c.child(0).attributes().get("href"))
         ).collect(Collectors.toList());
     }
 }
