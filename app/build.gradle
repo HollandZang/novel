@@ -64,4 +64,6 @@ dependencies {
 
 //     optional - Test helpers
 //    testImplementation "androidx.room:room-testing:$room_version"
+
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
 }

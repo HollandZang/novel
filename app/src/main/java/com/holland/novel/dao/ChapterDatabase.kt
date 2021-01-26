@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.holland.novel.domain.Chapter
 
-@Database(entities = [Chapter::class], version = 1)
+@Database(entities = [Chapter::class], version = 1,exportSchema = false)
 abstract class ChapterDatabase : RoomDatabase() {
     abstract fun chapterDao(): ChapterDao
 }

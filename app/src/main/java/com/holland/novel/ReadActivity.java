@@ -52,7 +52,7 @@ public class ReadActivity extends AppCompatActivity {
                         .subscribe(text -> {
                             vContent.append(chapters.get(index).getName());
                             vContent.append(text);
-                            vContent.append("\n");
+                            vContent.append("\n\n");
                         }),
                 null);
 
@@ -81,9 +81,11 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
+                                sv = new ScrollView(ReadActivity.this);
+//                                sv.smoothScrollTo(0, 0);
                                 vContent.setText(chapters.get(nextIndex).getName());
                                 vContent.append(text);
-                                vContent.append("\n");
+                                vContent.append("\n\n");
                                 index = nextIndex;
                             }),
                     null);
@@ -99,10 +101,11 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-
+                                sv = new ScrollView(ReadActivity.this);
+//                                sv.smoothScrollTo(0, 0);
                                 vContent.setText(chapters.get(prefixIndex).getName());
                                 vContent.append(text);
-                                vContent.append("\n");
+                                vContent.append("\n\n");
                                 index = prefixIndex;
                             }),
                     null);
