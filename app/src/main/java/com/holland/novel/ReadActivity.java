@@ -2,6 +2,7 @@ package com.holland.novel;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -81,8 +82,7 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-                                sv = new ScrollView(ReadActivity.this);
-//                                sv.smoothScrollTo(0, 0);
+                                sv.smoothScrollTo(0, 0);
                                 vContent.setText(chapters.get(nextIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");
@@ -101,8 +101,7 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-                                sv = new ScrollView(ReadActivity.this);
-//                                sv.smoothScrollTo(0, 0);
+                                sv.smoothScrollTo(0, 0);
                                 vContent.setText(chapters.get(prefixIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");

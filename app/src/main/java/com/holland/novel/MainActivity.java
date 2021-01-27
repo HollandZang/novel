@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         final Button btnSearch = findViewById(R.id.btn_search);
         final TextView vNovelName = findViewById(R.id.v_novel_name);
 
-        ChapterDatabase db = Room.databaseBuilder(getApplicationContext(), ChapterDatabase.class, "chapter.db").build();
+//        ChapterDatabase db = Room.databaseBuilder(getApplicationContext(), ChapterDatabase.class, "chapter.db").build();
 //         Room.databaseBuilder(getApplicationContext(), ChapterDatabase.class, "chapter.db").build()
 //         .chapterDao();
 
