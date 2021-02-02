@@ -9,13 +9,16 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.util.concurrent.TimeUnit
 import java.util.function.Consumer
 
 /**
  * 通用网络请求类
  */
 object BaseClient {
-    val INSTANCE = OkHttpClient()
+    val INSTANCE = OkHttpClient.Builder()
+        .callTimeout(2,TimeUnit.SECONDS)
+        .build()
 
     fun baseRequestAsync(context: Context, request: Request, onResponse: Consumer<Response>?, onFailure: Consumer<IOException>?) {
         INSTANCE.newCall(request).enqueue(

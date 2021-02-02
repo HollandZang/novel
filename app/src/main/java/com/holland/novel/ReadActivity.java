@@ -1,23 +1,23 @@
 package com.holland.novel;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-
+import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.holland.novel.domain.Chapter;
 import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
-
-import java.util.List;
-
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+
+import java.util.List;
 
 public class ReadActivity extends AppCompatActivity {
 
@@ -30,6 +30,9 @@ public class ReadActivity extends AppCompatActivity {
     Button btnNext;
     Button btnPrefix;
 
+    boolean ready2Next = false;
+
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +41,7 @@ public class ReadActivity extends AppCompatActivity {
         index = NovelStore.getIndex(this);
         chapters = NovelStore.getChapters(this);
         this.setTitle(novelName);
+        this.getWindow().
 
         vContent = findViewById(R.id.content);
         sv = findViewById(R.id.scrollView);
@@ -59,6 +63,20 @@ public class ReadActivity extends AppCompatActivity {
 
         /*选择翻页模式*/
         modelPageScroll();
+
+        sv.setOnTouchListener((v, event) -> {
+            int bottom = sv.getChildAt(0).getBottom() - sv.getMeasuredHeight();
+            if (event.getAction() == 1/*释放*/ && v.getScrollY() == bottom) {
+                if (ready2Next) {
+                    btnNext.callOnClick();
+                } else {
+                    Toast.makeText(ReadActivity.this, "请再次上拉以获取后续内容", Toast.LENGTH_SHORT).show();
+                    ready2Next = true;
+                }
+                return true;
+            }
+            return false;
+        });
     }
 
     /**
@@ -82,11 +100,12 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-                                sv.smoothScrollTo(0, 0);
+                                sv.scrollTo(0, 0);
                                 vContent.setText(chapters.get(nextIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");
                                 index = nextIndex;
+                                ready2Next = false;
                             }),
                     null);
         });
@@ -101,7 +120,7 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-                                sv.smoothScrollTo(0, 0);
+                                sv.scrollTo(0, 0);
                                 vContent.setText(chapters.get(prefixIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");
