@@ -3,21 +3,22 @@ package com.holland.novel;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.holland.novel.domain.Chapter;
 import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
 
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
 
 public class ReadActivity extends AppCompatActivity {
 
@@ -40,21 +41,22 @@ public class ReadActivity extends AppCompatActivity {
         novelName = NovelStore.getNovelName(this);
         index = NovelStore.getIndex(this);
         chapters = NovelStore.getChapters(this);
-        this.setTitle(novelName);
-        this.getWindow().
+//        this.setTitle(novelName);
+//        this.getWindow().
 
         vContent = findViewById(R.id.content);
         sv = findViewById(R.id.scrollView);
         btnNext = findViewById(R.id.btn_next);
         btnPrefix = findViewById(R.id.btn_prefix);
 
-        Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(index).getUrl());
+        Log.d("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(index).getUrl());
 
         BQGClient.INSTANCE.textPart(this,
                 chapters.get(index).getUrl(),
                 response -> Observable.just(response)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(text -> {
+                            vContent.append(novelName);
                             vContent.append(chapters.get(index).getName());
                             vContent.append(text);
                             vContent.append("\n\n");
@@ -93,7 +95,7 @@ public class ReadActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             int nextIndex = index + 1;
             NovelStore.nextStore(this, nextIndex);
-            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
+            Log.d("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
 
             BQGClient.INSTANCE.textPart(this,
                     chapters.get(nextIndex).getUrl(),
@@ -113,7 +115,7 @@ public class ReadActivity extends AppCompatActivity {
         btnPrefix.setOnClickListener(v -> {
             int prefixIndex = index - 1;
             NovelStore.nextStore(this, prefixIndex);
-            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(prefixIndex).getUrl());
+            Log.d("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(prefixIndex).getUrl());
 
             BQGClient.INSTANCE.textPart(this,
                     chapters.get(prefixIndex).getUrl(),
@@ -137,7 +139,7 @@ public class ReadActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> {
             int nextIndex = index + 1;
             NovelStore.nextStore(this, nextIndex);
-            Log.i("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
+            Log.d("ReadActivity", "No." + NovelStore.getIndex(this) + ", url: " + chapters.get(nextIndex).getUrl());
 
             BQGClient.INSTANCE.textPart(this,
                     chapters.get(nextIndex).getUrl(),
