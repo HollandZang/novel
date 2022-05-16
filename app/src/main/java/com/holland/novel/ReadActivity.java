@@ -56,8 +56,7 @@ public class ReadActivity extends AppCompatActivity {
                 response -> Observable.just(response)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(text -> {
-                            vContent.append(novelName);
-                            vContent.append(chapters.get(index).getName());
+                            vContent.append(novelName + '\t' + chapters.get(index).getName());
                             vContent.append(text);
                             vContent.append("\n\n");
                         }),
@@ -103,7 +102,7 @@ public class ReadActivity extends AppCompatActivity {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
                                 sv.scrollTo(0, 0);
-                                vContent.setText(chapters.get(nextIndex).getName());
+                                vContent.setText(novelName + '\t' + chapters.get(nextIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");
                                 index = nextIndex;
@@ -123,7 +122,7 @@ public class ReadActivity extends AppCompatActivity {
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
                                 sv.scrollTo(0, 0);
-                                vContent.setText(chapters.get(prefixIndex).getName());
+                                vContent.setText(novelName + '\t' + chapters.get(prefixIndex).getName());
                                 vContent.append(text);
                                 vContent.append("\n\n");
                                 index = prefixIndex;
@@ -146,9 +145,9 @@ public class ReadActivity extends AppCompatActivity {
                     response -> Observable.just(response)
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(text -> {
-                                vContent.append(chapters.get(nextIndex).getName());
+                                vContent.append(novelName + '\t' + chapters.get(nextIndex).getName());
                                 vContent.append(text);
-                                vContent.append("\n");
+                                vContent.append("\n\n");
                                 index = nextIndex;
                             }),
                     null);

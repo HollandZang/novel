@@ -5,12 +5,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.room.Room;
 
 import com.alibaba.fastjson.JSON;
-import com.holland.novel.dao.ChapterDatabase;
 import com.holland.novel.http.bqg.BQGClient;
 import com.holland.novel.storage.NovelStore;
 
@@ -23,6 +22,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        Thread.setDefaultUncaughtExceptionHandler((t, e) -> Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show());
+
         final Button btnSearch = findViewById(R.id.btn_search);
         final TextView vNovelName = findViewById(R.id.v_novel_name);
 
